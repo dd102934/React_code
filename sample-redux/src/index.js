@@ -2,16 +2,46 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {createStore} from 'redux';
 
+const incrementCount = ({incrementBy = 1} = {}) => ({
+  type: 'INCREMENT',
+  incrementBy
+});
+
+const decrementCount = ({decrementBy = 1} = {}) => ({
+  type: 'DECREMENT',
+  decrementBy
+});
+
+const setCount = ({count}) =>({
+  type: 'SET',
+  count
+});
+
+const resetCount = () =>({
+  type: 'RESET'
+});
+
+
+
+
+
 const store = createStore((state = {count: 0}, action) => {
   switch (action.type) {
     case 'INCREMENT':
-      const incrementBy = typeof action.incrementBy === 'number' ? action.incrementBy : 1;
       return {
-          count: state.count + incrementBy
+          count: state.count + action.incrementBy
       };
     case 'DECREMENT':
       return {
-          count: state.count - 1
+        count: state.count - action.decrementBy
+      };
+    case 'SET':
+      return {
+        count: action.count
+      };
+    case 'RESET':
+      return {
+        count: 0
       };
     default:
       return state;  
@@ -25,11 +55,25 @@ store.dispatch({
     incrementBy: 5
   });
 
-store.dispatch({
-  type: 'INCREMENT'
-});
+store.dispatch(incrementCount());
+
+store.dispatch(incrementCount({incrementBy: 5}));
 
 console.log(store.getState());
+
+
+store.dispatch(decrementCount({decrementBy: 5}));
+
+console.log(store.getState());
+
+store.dispatch(setCount({count: 101}));
+
+console.log(store.getState());
+
+store.dispatch(resetCount());
+
+console.log(store.getState());
+
 
 const book = {
   title: 'Ego',
